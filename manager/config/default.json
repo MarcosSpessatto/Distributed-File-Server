@@ -1,0 +1,16 @@
+{
+  "mongo": {
+    "username": "file-server",
+    "password": "file-server",
+    "server": "localhost",
+    "port": 27017,
+    "database": "file-server"
+  },
+  "myPort": "3000",
+  "timeout": 8000,
+  "sockets": {
+    "first": "http://localhost:3004",
+    "second": "http://localhost:3005",
+    "third": "http://localhost:3006"
+  }
+}

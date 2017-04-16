@@ -1,0 +1,9 @@
+{
+  "ok": {"code": 0, "status": "Ok"},
+  "unavailable": {"code": 1, "status": "Servidor Indisponível"},
+  "fileNotFound": {"code": 2, "status": "Arquivo Inexistente"},
+  "fileExists": {"code": 3, "status": "Arquivo Já Existe"},
+  "unavailableFile": {"code": 3, "status": "Arquivo Indisponível"},
+  "internalError": {"code": 500, "status": "Erro interno no servidor"},
+  "parameters": {"code": 400, "status": "Parametros insuficientes"}
+}

@@ -1,0 +1,50 @@
+<div class="row">
+    <h1 class="center">New File</h1>
+    <div ng-if="!file.isLoading" class="col l12 m12 s12" style="margin-bottom: 50px;">
+        <div class="center">
+            <a class="btn waves-effect waves-light" href="#!/my-files" type="submit" name="action">My Files
+            </a>
+        </div>
+    </div>
+    <div ng-if="!file.isLoading" class="col l12 m12 s12">
+        <form ng-submit="file.upload(file.picFile)">
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file"
+                           ngf-select ng-model="file.picFile">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m12 l12">
+                    <input id="first_name" type="text" ng-model="file.name" required class="validate">
+                    <label for="first_name">File Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col l12 m12 s12 center">
+                    <button class="waves-effect waves-light btn" type="submit">Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="center" style="margin-top: 50px;">
+        <div ng-if="file.isLoading" class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

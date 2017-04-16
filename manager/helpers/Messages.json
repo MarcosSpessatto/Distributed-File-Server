@@ -1,0 +1,10 @@
+{
+  "ok": {"code": 0, "status": "Ok"},
+  "unavailable": {"code": 1, "status": "Servidor Indisponivel"},
+  "fileNotFound": {"code": 2, "status": "Arquivo Inexistente"},
+  "fileExists": {"code": 3, "status": "Arquivo Ja Existe"},
+  "unavailableFile": {"code": 3, "status": "Arquivo Indisponivel"},
+  "internalError": {"code": -1, "status": "Erro interno do servidor"},
+  "parameters": {"code": 400, "status": "Preencha os dados corretamente"},
+  "wrongCommand": {"code": 500, "status": "Comando nao identificado, por favor verifique"}
+}
