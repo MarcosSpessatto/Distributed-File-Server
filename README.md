@@ -14,6 +14,7 @@ MongoDB
 ## MANAGERS
 #### Example:
  - node -r babel-register -r babel-polyfill <span>bin/www.js</span> --server-port 3000 --client-port 3030 --ip 192.168.50.103 <br/>
+ 
 Where: <br/>
 - --server-port: Port on which the servers will connect via Websockets ([Socket.IO](https://socket.io/))
 - --client-port: Port on which the servers will connect via sockets TCP ([NET module](https://nodejs.org/api/net.html))
