@@ -1,7 +1,9 @@
-import app from '../app'
+import net from 'net'
+import SocketService from '../services/SocketService'
+import validate from '../helpers/StartHelper'
 
-const server = app.listen(global.port, () => {
-    const host = server.address().address;
-    const port = server.address().port;
-    console.log('Server is running on port ' + port + '...');
-});
+validate(process.argv);
+
+SocketService.init();
+net.createServer((socket) => {}).listen(global.port);
+console.log(`Server is running on port ${global.port}...`);

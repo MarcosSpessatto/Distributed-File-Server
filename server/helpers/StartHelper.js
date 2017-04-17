@@ -3,6 +3,7 @@ export default function validate(params){
     validateIp(params);
     validatePort(params);
     validateManagers(params);
+    validateName(params);
 }
 
 function validateIp(params){
@@ -17,6 +18,21 @@ function validateIp(params){
             process.exit(1);
         } else {
             global.ip = params[index + 1];
+        }
+    }
+}
+
+function validateName(params){
+    if(!params.includes('--name')){
+        console.log('\x1b[33m', 'Por favor informe o nome do server' ,'\x1b[0m');
+        process.exit(1);
+    } else {
+        let index = params.findIndex((x) => x.includes('--name'));
+        if(!params[index + 1]){
+            console.log('\x1b[33m', 'Informe o nome' ,'\x1b[0m');
+            process.exit(1);
+        } else {
+            global.serverName = params[index + 1];
         }
     }
 }

@@ -1,7 +1,7 @@
 
 class ResponseFactory {
 
-    makeresponse(code, message, data = undefined){
+    makeresponse(code, message, data){
         let response = {};
         response.codRetorno = code;
         response.descricaoRetorno = message;
