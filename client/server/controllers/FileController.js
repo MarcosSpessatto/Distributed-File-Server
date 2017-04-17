@@ -33,7 +33,6 @@ class FileController {
                         response.json(JSON.parse(body))
                     }
                 })
-                response.json({codRetorno: 500, descricaoRetorno: 'No preview available'})
             } else {
                 response.json(JSON.parse(body))
             }

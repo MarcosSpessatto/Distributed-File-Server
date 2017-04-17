@@ -33,12 +33,12 @@
             })
         }
 
-        function download(file, filename) {
+        function download(filename) {
             vm.isLoading = true;
-            fileserverservice.getFile(file.name).then(function (response) {
+            fileserverservice.getFile(filename).then(function (response) {
                     console.log(response)
                 vm.isLoading = false;
-                if(response.data.codRetorno === 1){
+                if(response.data.codRetorno === 1 || response.data.codRetorno === 2){
                     Materialize.toast(response.data.descricaoRetorno, 4000);
                 } else {
                     var type = _getType(filename);

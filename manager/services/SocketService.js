@@ -149,7 +149,7 @@ class SocketService {
     static getFileFromServer(name) {
         return new Promise((resolve, reject) => {
             SocketService.database.findOne(name)
-                .then((res) => res.server)
+                .then((res) => (res ? res.server : resolve(SocketService.response.makeresponse(Messages.fileNotFound.code, Messages.fileNotFound.status))))
                 .then((server) => SocketService.Sockets.find((x) => x.id === server))
                 .then((socket) => {
                     if (socket.socket.connected) {

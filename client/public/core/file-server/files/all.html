@@ -1,44 +1,54 @@
 <div class="row">
-	<div class="col l12 m12 s12" style="margin-bottom: 50px;">
-		<h1 class="center">My Files</h1>
-		<div class="center">
-			<a class="btn waves-effect waves-light" href="#!/new-file" type="submit" name="action">New File
-		  	</a>	
-	  	</div>
-	</div>
-	<table ng-if="!files.isLoading && files.files.length > 0">
+    <div class="col l12 m12 s12" style="margin-bottom: 50px;">
+        <h1 class="center">My Files</h1>
+        <div class="center">
+            <a class="btn waves-effect waves-light" href="#!/new-file" type="submit" name="action">New File
+            </a>
+        </div>
+        <div class="row">
+            <form ng-submit="files.download(files.name)">
+                <div class="input-field col s12 m12 l12">
+                    <input id="first_name" type="text" ng-model="files.name" class="validate">
+                    <label for="first_name">Search file</label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table ng-if="!files.isLoading && files.files.length > 0">
         <thead>
-          <tr>
-              <th>Name</th>
-              <th colspan="2">Options</th>
-          </tr>
+        <tr>
+            <th>Name</th>
+            <th colspan="2">Options</th>
+        </tr>
         </thead>
 
-        <tbody >
-          <tr ng-repeat="(key, file) in files.files track by $index">
+        <tbody>
+        <tr ng-repeat="(key, file) in files.files track by $index">
             <td>{{file.name}}</td>
             <td colspan="2">
-            	<button ng-click="files.download(file, file.name)" class="waves-effect waves-light btn">Download</button>
-            	<button  ng-click="files.deleteFile(file, key)" class="waves-effect waves-light btn red">Delete</button>
+                <button ng-click="files.download(file.name)" class="waves-effect waves-light btn">Download</button>
+                <button ng-click="files.deleteFile(file, key)" class="waves-effect waves-light btn red">Delete</button>
             </td>
-          </tr>
+        </tr>
         </tbody>
-      </table>
-			<div ng-if="files.files.length === 0">
-            <p class="center"><strong>No files yet.</strong></p>
+    </table>
+    <div ng-if="files.files.length === 0">
+        <p class="center"><strong>No files yet.</strong></p>
 
-				</div>
-      <div class="center" style="margin-top: 50px;">
-		<div ng-if="files.isLoading" class="preloader-wrapper big active">
-		    <div class="spinner-layer spinner-blue-only">
-		      <div class="circle-clipper left">
-		        <div class="circle"></div>
-		      </div><div class="gap-patch">
-		        <div class="circle"></div>
-		      </div><div class="circle-clipper right">
-		        <div class="circle"></div>
-		      </div>
-		    </div>
-		  </div>
-  	</div>
+    </div>
+    <div class="center" style="margin-top: 50px;">
+        <div ng-if="files.isLoading" class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
