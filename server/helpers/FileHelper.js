@@ -1,128 +1,109 @@
-import fs from 'fs'
-import path from 'path'
-// import glob from 'glob'
-// import dir from 'node-dir'
+// TODO: Intregate this file-service with the project
+// TODO: change to be in project standard
 
-class FileHelper {
+const fs = require('fs');
+const path = require('path');
 
-    static basePath = fs.realpathSync('.') + '/uploads';
+const maxFiles = 36;
+const subFolder = 'more';
 
-    static walkSync(dir) {
-        let fileList = []; fs.readdirSync(dir).forEach(file => {
-            fileList = fs.statSync(path.join(dir, file)).isDirectory() ?
-                FileHelper.walkSync(path.join(dir, file), fileList) :
-                fileList.concat(path.basename(file));
+let mainDir;
+let dirInfo;
 
-        });
-        return fileList;
-    }
-
-  /*  static getAllFiles(){
-        return new Promise((resolve, reject) => {
-            glob(`${FileHelper.basePath}`, {}, function (err, files) {
-                if(err) reject();
-                resolve(files)
-            })
-        })
-    }
-
-    static getSubDirs(directory) {
-        return new Promise((resolve, reject) => {
-            dir.paths(directory, (err, paths) => {
-                if (err) reject(err);
-                resolve(paths.dirs)
-            });
-        })
-    }
-
-    static saveFile(data){
-        return new Promise((resolve, reject) => {
-            let filename = data.name;
-            let bitmap = Buffer.from(data.file, 'base64');
-            if(FileHelper.createPathIfNotExists(FileHelper.basePath)){
-                FileHelper
-                    .getAllFiles()
-                    .then((files) => FileHelper.getPathToSave(files))
-                    .catch((e) => reject())
-            }
-            let path = `${basePath}${filename}`;
-            fs.writeFile(path, bitmap, (err) => {
-                if (err) {
-                    callback(500);
-                }
-                callback(Messages.ok);
-            });
-        })
-    }
-
-    static getPathToSave(files){
-        return new Promise((resolve, reject) => {
-            let expectDirs = Math.ceil((files + 1) / 36);
-            if(expectDirs === 1){
-                resolve(FileHelper.basePath);
-            } else if(expectDirs > 1 && expectDirs <= 36){
-                let newPath = `${FileHelper.basePath}/${expectDirs}`;
-                if(FileHelper.createPathIfNotExists(newPath)){
-                    resolve(newPath);
-                }
-            } else {
-                let expectSubDir = Math.ceil(expectDirs /36);
-                FileHelper.basePath
-            }
-        })
-    }
-
-    static createPathIfNotExists(path){
-        if (!fs.existsSync(path)) {
-            fs.mkdirSync(path, 0o766, (err) => {
-                if(err) return false;
-            });
+// Sync to hold requests while main directory is not created
+function checkMainDir(dirSuffix) {
+    mainDir = 'files_' + dirSuffix;
+    if (!fs.existsSync(mainDir)) {
+        fs.mkdirSync(mainDir);
+        dirInfo = {
+            allFiles: [],
+            dirLen: 0,
+            dirPath: mainDir
         }
-        return true;
+    } else {
+        dirInfo = walkFolders(mainDir);
+        checkToCreateSubFolder();
     }
-
-    static diretoryTreeToObj(dir, ) {
-        return new Promise((resolve, reject) => {
-            var results = [];
-            fs.readdir(dir, function(err, list) {
-                if (err)
-                   reject(err)
-
-                var pending = list.length;
-
-                if (!pending)
-                    resolve({name: path.basename(dir), type: 'folder', children: results});
-
-                list.forEach(function(file) {
-                    file = path.resolve(dir, file);
-                    fs.stat(file, function(err, stat) {
-                        if (stat && stat.isDirectory()) {
-                            diretoryTreeToObj(file, function(err, res) {
-                                results.push({
-                                    name: path.basename(file),
-                                    type: 'folder',
-                                    children: res
-                                });
-                                if (!--pending)
-                                    done(null, results);
-                            });
-                        }
-                        else {
-                            results.push({
-                                type: 'file',
-                                name: path.basename(file)
-                            });
-                            if (!--pending)
-                                done(null, results);
-                        }
-                    });
-                });
-            });
-        })
-
-};
-*/
 }
 
+function walkFolders(dirPath, allFiles, filesDict) {
+    const files = fs.readdirSync(dirPath);
+    let res = {
+        allFiles: allFiles || [],
+        dirLen: files.length,
+        filesDict: filesDict || {},
+        dirPath
+    };
 
-export default FileHelper
+    files.forEach((file) => {
+        const filePath = path.join(dirPath, file);
+        if (fs.statSync(filePath).isDirectory()) {
+            res = walkFolders(filePath, res.allFiles, res.filesDict);
+        }
+        else {
+            res.allFiles.push(file);
+            res.filesDict[file] = filePath;
+        }
+    });
+    return res;
+}
+
+function checkToCreateSubFolder() {
+    if(dirInfo.dirLen + 1 >= maxFiles) {
+        const newFolder = path.join(dirInfo.dirPath, subFolder);
+        fs.mkdirSync(newFolder);
+        dirInfo.dirPath = newFolder;
+        dirInfo.dirLen = 0;
+    }
+}
+
+function deleteFile(filename) {
+    return new Promise((resolve, reject) => {
+        fs.unlink(dirInfo.filesDict[filename], (err, res) => {
+            if (err) reject(err);
+            else {
+                delete dirInfo.filesDict[filename];
+                resolve(res);
+            }
+        });
+    });
+}
+
+// Get UTF8 file and already convert it into BASE64
+function readFile(filename) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(dirInfo.filesDict[filename], (err, res) => {
+            if (err) reject(err);
+            else resolve(convertBinaryToBase64(res));
+        });
+    });
+}
+
+function writeFile(filename, base64file) {
+    const file = convertBase64ToBinary(base64file);
+    const fullPath = path.join(dirInfo.dirPath, filename);
+    return new Promise((resolve, reject) => {
+        fs.writeFile(fullPath, file, (err, res) => {
+            if (err) reject(err);
+            else resolve(res);
+            dirInfo.dirLen++;
+            dirInfo.filesDict[filename] = fullPath;
+            checkToCreateSubFolder();
+        });
+    });
+}
+
+function convertBase64ToBinary(base64) {
+    return Buffer.from(base64, 'base64');
+}
+
+function convertBinaryToBase64(binary) {
+    return new Buffer(binary).toString('base64');
+}
+
+module.exports = {
+    checkMainDir,
+    deleteFile,
+    readFile,
+    writeFile
+};
