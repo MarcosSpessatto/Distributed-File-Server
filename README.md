@@ -1,48 +1,51 @@
 # Distributed-File-Server
 
-Para rodar o sistema distribuido, siga os seguintes passos:
+## System Premises
+- See this [repository](https://github.com/selatotal/SistemasDistribuidos/tree/master/Trabalhos/201701)
 
-Com o NODEJS instalado na máquina
+### Prerequisites
+NodeJS<br/>
+MongoDB
 
-RODE O ARQUIVO run.sh para baixar as dependencias do projeto
+### Instalation
+- Run MongoDB (port 27017 default)
+- Run 'run.sh' to install dependencies
 
-Rode o MongoDB na porta padrão (27017)
+## MANAGERS
+#### Example:
+ - node -r babel-register -r babel-polyfill <span>bin/www.js</span> --server-port 3000 --client-port 3030 --ip 192.168.50.103 <br/>
+Where: <br/>
+- --server-port: Port on which the servers will connect via Websockets ([Socket.IO](https://socket.io/))
+- --client-port: Port on which the servers will connect via sockets TCP ([NET module](https://nodejs.org/api/net.html))
+- --ip: extern IP, to clients and servers connect.
 
-Rode antes todos os gerenciadores do sistema da seguinte forma:
+## SERVERS
+#### Example: 
+node -r babel-register -r babel-polyfill bin/www.js --ip 192.168.50.103 --port 3001 --managers `http://localhost:3000` --name server_name <br/>
 
-GERENCIADOR
+Where: <br/>
+ - --ip: ip of computer
+- --port: port to run
+- --managers: active managers list (adress and port)
+- --name: server name, to create a folder of files from that server
 
-Exemplo:
-node -r babel-register -r babel-polyfill bin/www.js --server-port 3000 --client-port 3030 --ip 192.168.50.103
+## CLIENTS
+#### Example
+node -r babel-register -r babel-polyfill bin/www.js --port 3050 --managers `http://192.168.50.103:3030` <br/>
 
-onde: 
- --server-port: porta em que os servers irão se conectar por meio de sockets(socketIO https://socket.io/)
- --client-port: porta em que os clients irão se conectar por meio de sockets TCP (NET module https://nodejs.org/api/net.html)
---ip: é o ip para acesso externo da máquina, onde servers e clients se conectarão
+Where: <br/>
+- --port: Port to run
+- --managers: active managers list (adress and port)
 
-SERVIDOR
+### Developed only for academic purposes of computer science course.
+#### Technologies
+- NodeJS
+- MongoDB
+- TCP sockets (to connect with multiples languages)
+- SocketIO
+- ES6 features
+- AngularJS
 
-Exemplo:
-node -r babel-register -r babel-polyfill bin/www.js --ip 192.168.50.103 --port 3001 --managers http://localhost:3000 --name server_name
-
-onde:
-
---ip: ip da máquina onde está o server
---port: porta que irá rodar
---managers: lista dos endereços de gerenciadores ativos, (endereço e porta)
---name: nome do servidor, para poder criar uma pasta de arquvivos desse servidor
-
-CLIENT
-
-Exemplo:
-node -r babel-register -r babel-polyfill bin/www.js --port 3050 --managers http://192.168.50.103:3030
-
-onde:
---port: porta onde irá rodar
---managers: lista dos endereços de gerenciadores ativos (endereço e porta)
-
-
-Caso queira ter uma visão de todos os arquivos disponíveis em lista, rode um gerenciador na porta 3000 ou 3001,
-caso contrário para pegar um arquivo é só fazer um GET nomearquivo
-
-O cliente se encarregará de escolher qualquer um dos gerenciadores ativos no momento, caso um caia ele tentará comunicação com qualquer outro automaticamente.
+### Authors
+[@MarcosSpessatto](https://github.com/MarcosSpessatto) <br/>
+[@pedrokehl](https://github.com/pedrokehl)
