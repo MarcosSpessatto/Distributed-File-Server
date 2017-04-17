@@ -5,11 +5,26 @@ const Readable = stream.Readable;
 
 class NetService {
 
-    static upload(data) {
+
+    static execute(data, method) {
         return new Promise((resolve, reject) => {
             NetService
                 .getConnection()
                 .then((client) => {
+
+                    switch (method) {
+                        case 'PUT':
+                            client.write(`PUT ${data.name} ${data.file}\n`);
+                            break;
+                        case 'GET':
+                            client.write(`GET ${data.name}\n`);
+                            break;
+                        case 'DELETE':
+                            client.write(`DELETE ${data.name}\n`);
+                            break;
+                    }
+
+
                     let chunks = [];
 
                     let s = new Readable();
@@ -17,7 +32,6 @@ class NetService {
 
                     };
 
-                    client.write(`PUT ${data.name} ${data.file}\n`)
 
                     client.on('data', (data) => {
                         let str = data.toString();
@@ -41,84 +55,6 @@ class NetService {
                     })
                 })
                 .catch((e) => resolve({"codRetorno": 500, "descricaoRetorno": "Nenhum gerenciador ativo"}));
-        })
-    }
-
-    static getFile(name) {
-        return new Promise((resolve, reject) => {
-            NetService
-                .getConnection()
-                .then((client) => {
-                    let chunks = [];
-
-                    let s = new Readable();
-                    s._read = function (n) {
-
-                    };
-
-                    client.write(`GET ${name}\n`)
-
-                    client.on('data', (data) => {
-                        let str = data.toString();
-                        if (!str.includes('\n')) {
-                            s.push(data)
-                        } else {
-                            data = data.toString().replace('\n', ' ');
-                            s.push(data)
-                            s.push(null)
-                            client.destroy();
-                        }
-                    });
-
-                    s.on('data', (data) => {
-                        chunks.push(data)
-                    });
-
-                    s.on('end', () => {
-                        const all = Buffer.concat(chunks);
-                        resolve(JSON.parse(all.toString()))
-                    })
-                }).catch((e) => resolve({"codRetorno": 500, "descricaoRetorno": "Nenhum gerenciador ativo"}));
-        })
-    }
-
-    static deleteFile(name) {
-        return new Promise((resolve, reject) => {
-            NetService
-                .getConnection()
-                .then((client) => {
-
-                    let chunks = [];
-
-                    let s = new Readable();
-                    s._read = function (n) {
-
-                    };
-
-
-                    client.write(`DELETE ${name}\n`);
-
-                    client.on('data', (data) => {
-                        let str = data.toString();
-                        if (!str.includes('\n')) {
-                            s.push(data)
-                        } else {
-                            data = data.toString().replace('\n', ' ');
-                            s.push(data);
-                            s.push(null);
-                            client.destroy();
-                        }
-                    });
-
-                    s.on('data', (data) => {
-                        chunks.push(data)
-                    });
-
-                    s.on('end', () => {
-                        const all = Buffer.concat(chunks);
-                        resolve(JSON.parse(all.toString()))
-                    })
-                }).catch((e) => resolve({"codRetorno": 500, "descricaoRetorno": "Nenhum gerenciador ativo"}));
         })
     }
 
@@ -156,6 +92,5 @@ class NetService {
     }
 
 }
-
 
 export default NetService

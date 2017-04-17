@@ -6,8 +6,6 @@ Com o NODEJS instalado na máquina
 
 RODE O ARQUIVO run.sh para baixar as dependencias do projeto
 
-Faça quantas cópias de cada pasta que achar necessário para o bom funcionamento do sistema.
-
 Rode o MongoDB na porta padrão (27017)
 
 Rode antes todos os gerenciadores do sistema da seguinte forma:
@@ -25,13 +23,14 @@ onde:
 SERVIDOR
 
 Exemplo:
-node -r babel-register -r babel-polyfill bin/www.js --ip 192.168.50.103 --port 3001 --managers http://localhost:3000 
+node -r babel-register -r babel-polyfill bin/www.js --ip 192.168.50.103 --port 3001 --managers http://localhost:3000 --name server_name
 
 onde:
 
 --ip: ip da máquina onde está o server
 --port: porta que irá rodar
 --managers: lista dos endereços de gerenciadores ativos, (endereço e porta)
+--name: nome do servidor, para poder criar uma pasta de arquvivos desse servidor
 
 CLIENT
 
@@ -43,7 +42,7 @@ onde:
 --managers: lista dos endereços de gerenciadores ativos (endereço e porta)
 
 
-Caso queira ter uma visão de todos os arquivos disponíveis em lista, rode um gerenciador na porta 3000,
+Caso queira ter uma visão de todos os arquivos disponíveis em lista, rode um gerenciador na porta 3000 ou 3001,
 caso contrário para pegar um arquivo é só fazer um GET nomearquivo
 
 O cliente se encarregará de escolher qualquer um dos gerenciadores ativos no momento, caso um caia ele tentará comunicação com qualquer outro automaticamente.

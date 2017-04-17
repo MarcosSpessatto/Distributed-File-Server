@@ -78,7 +78,6 @@ class SocketService {
 
     static upload(json) {
         return new Promise((resolve, reject) => {
-            //let nameToSaveIntoDatabase = `${json.name}.${json.extension}`;
             let socket = null;
             SocketService.database.getBestServer()
                 .then((res) => {

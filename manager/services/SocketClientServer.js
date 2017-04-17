@@ -29,12 +29,12 @@ class SocketClientServer {
                 if(!str.includes('\n')){
                     s.push(data)
                 } else {
-                    s.push(data)
+                    s.push(data);
                     s.push(null)
                 }
             });
 
-            s.on('data', (chunk) => chunks.push(chunk))
+            s.on('data', (chunk) => chunks.push(chunk));
 
             s.on('end', () => {
                 const data = Buffer.concat(chunks);
@@ -42,7 +42,7 @@ class SocketClientServer {
                 chooseOption(request)
                  .then((res) => connection.write(`${JSON.stringify(res)}\n`))
                  .catch((e) => connection.write(`${JSON.stringify(e)}\n`))
-            })
+            });
 
             connection.on('end', function () {
             });

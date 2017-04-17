@@ -11,7 +11,7 @@ class FileController {
             }
             let json = {file: data.toString('base64'), name: request.body.name};
             NetService
-                .upload(json)
+                .execute(json, 'PUT')
                 .then((res) => response.json(res))
                 .catch((e) => response.json(e));
         });
@@ -23,6 +23,16 @@ class FileController {
             url: `http://localhost:3000/api/files`
         }, (err, res, body) => {
             if (err) {
+                req.get({
+                    method: 'GET',
+                    url: `http://localhost:3000/api/files`
+                }, (err, res, body) => {
+                    if (err) {
+                        response.json({codRetorno: 500, descricaoRetorno: 'No preview available'})
+                    } else {
+                        response.json(JSON.parse(body))
+                    }
+                })
                 response.json({codRetorno: 500, descricaoRetorno: 'No preview available'})
             } else {
                 response.json(JSON.parse(body))
@@ -32,14 +42,14 @@ class FileController {
 
     getByName(request, response, next) {
         NetService
-            .getFile(request.params.name)
+            .execute({name: request.params.name}, 'GET')
             .then((res) => response.json(res))
             .catch((e) => response.json(e));
     }
 
     delete(request, response, next) {
         NetService
-            .deleteFile(request.params.name)
+            .execute({name: request.params.name}, 'DELETE')
             .then((res) => response.json(res))
             .catch((e) => response.json(e));
     }
