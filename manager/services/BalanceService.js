@@ -17,7 +17,7 @@ export default function balance() {
                         .find()
                         .then((res) => {
                             files = res.length;
-                            if (files > 10) {
+                            if (files > 30) {
                                 let sockets = SocketService.Sockets;
                                 if (sockets.length > 1) {
                                     db
