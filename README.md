@@ -17,7 +17,7 @@ MongoDB
  
 Where: <br/>
 - --server-port: Port on which the servers will connect via Websockets ([Socket.IO](https://socket.io/))
-- --client-port: Port on which the servers will connect via sockets TCP ([NET module](https://nodejs.org/api/net.html))
+- --client-port: Port on which the servers will connect via TCP sockets ([NET module](https://nodejs.org/api/net.html))
 - --ip: extern IP, to clients and servers connect.
 
 ## SERVERS
