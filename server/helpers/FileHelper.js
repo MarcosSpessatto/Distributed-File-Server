@@ -18,7 +18,8 @@ function checkMainDir(dirSuffix) {
         dirInfo = {
             allFiles: [],
             dirLen: 0,
-            dirPath: mainDir
+            dirPath: mainDir,
+            filesDict: {}
         }
     } else {
         dirInfo = walkFolders(mainDir);
